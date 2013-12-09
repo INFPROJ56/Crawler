@@ -4,7 +4,7 @@ import re
 
 website = "http://www.starapple.nl/"
 vacature_list = website + "inline/vacatures/"
-pagemax = 4
+pagemax = 99999;
 responses = []
 urls = []
 standplaatsen = []
@@ -18,6 +18,10 @@ for page in range(1, pagemax + 1):
     response = urllib.request.urlopen(page_url)
     html = response.read().decode('utf-8')
     responses.append(html)
+    if(page > 300):
+        foundend = re.findall("Geen vacatures gevonden met de opgegeven zoekcriteria", html);
+        if foundend:
+            break
 
 for page in responses:
     foundurls = re.findall("href=\"/(.*)/\"", page);
