@@ -9,7 +9,6 @@ fileName = "data.txt"
 file = open(fileName, "w")
 website = "http://www.starapple.nl/"
 vacature_list = website + "inline/vacatures/"
-currentPos = 1
 responses = []
 urls = []
 urlContent = []
@@ -51,11 +50,9 @@ for page in responses:
 
 print("\nSaving data...")
 
-def data_saver():
-    for url in urls:
+def data_saver(startUrl, endUrl):
+    for url in urls[startUrl:endUrl]:
         req = urllib.request.Request(url= website + url,headers={'User-Agent':' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'})
-        print("Storing data data from url " + str(currentPos) + "in a list.")
-        currentPos += 1
         try:
             response = urllib.request.urlopen(req)
         except HTTPError as e:
@@ -63,10 +60,10 @@ def data_saver():
             urlContent.append(content)
 
 for i in range(0, number_of_threads):
-    t = threading.Thread(target = vacature_browser, args=(i*70+1, (i+1)*70))
+    t = threading.Thread(target = data_saver, args=(i*70+1, (i+1)*70))
     t.setDaemon(1)
     t.start()
-    tlist.append(thread)
+    tlist.append(t)
 
 for i in tlist:
     i.join()
