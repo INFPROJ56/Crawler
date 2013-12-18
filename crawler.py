@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import urllib.request
 import string
 import re
@@ -17,6 +19,7 @@ tlist = []
 number_of_threads = 40
 
 # browse vacature urls
+def removeNonAscii(h): return "".join(i for i in h if ord(i)<128)
 
 def vacature_browser(startPage, pagemax):    
     for page in range(startPage, pagemax + 1):
@@ -26,7 +29,7 @@ def vacature_browser(startPage, pagemax):
         html = response.read().decode('utf-8')
         responses.append(html)
         if(page > 325):
-            foundend = re.findall("Geen vacatures gevonden met de opgegeven zoekcriteria", html);
+            foundend = re.findall(r"Geen vacatures gevonden met de opgegeven zoekcriteria", html);
             if foundend:
                 if(page - startPage + 1 != 1):
                     print (str(page - startPage + 1) + " pages crawled.")
@@ -43,7 +46,7 @@ for i in threadlist:
     i.join()
 
 for page in responses:
-    foundurls = re.findall("href=\"/(.*)/\"", page);
+    foundurls = re.findall(r"href=\"/(.*)/\"", page);
     for url in foundurls:
         urls.append(url)
 
@@ -52,15 +55,14 @@ print("\nSaving data...")
 def data_saver(startUrl, endUrl):
     currentUrl = startUrl
     for url in urls[startUrl:endUrl]:
-        print("current url is now" + str(currentUrl))
         req = urllib.request.Request(url= website + url,headers={'User-Agent':' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'})
         try:
             response = urllib.request.urlopen(req)
             html = response.read().decode('utf-8')
+            removeNonAscii(html)
             script_dir = os.path.dirname(__file__) 
             rel_path = "raw html data\index" + str(currentUrl) + ".html"
             abs_file_path = os.path.join(script_dir, rel_path)
-            print(abs_file_path)
             file = open(abs_file_path, "w")
             file.write(html)
             file.close()
@@ -71,7 +73,6 @@ def data_saver(startUrl, endUrl):
             script_dir = os.path.dirname(__file__) 
             rel_path = "raw html data\index" + str(currentUrl) + ".html"
             abs_file_path = os.path.join(script_dir, rel_path)
-            print(abs_file_path)
             file = open(abs_file_path, "w")
             file.write(content)
             file.close()
