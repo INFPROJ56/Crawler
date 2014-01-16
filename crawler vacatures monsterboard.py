@@ -15,7 +15,7 @@ urlContent = []
 standplaatsen = []
 threadlist = []
 tlist = []
-number_of_threads = 1
+number_of_threads = 4
 
 def removeNonAscii(h): return "".join(i for i in h if ord(i)<128)
 
@@ -43,7 +43,7 @@ def vacature_browser(startPage, pagemax):
 print ("Loading data from " + website + "\n")
 
 for i in range(0, number_of_threads):
-    thread = threading.Thread(target = vacature_browser, args=(i*1+1, (i+1)*1))
+    thread = threading.Thread(target = vacature_browser, args=(i*10+1, (i+1)*10))
     thread.setDaemon(1)
     thread.start()
     threadlist.append(thread)
@@ -67,13 +67,13 @@ print("\nSaving data...")
 def data_saver(startUrl, endUrl):
     currentUrl = startUrl
     for url in urls[startUrl:endUrl]:
-        req = urllib.request.Request(url= website + url,headers={'User-Agent':' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'})
+        req = urllib.request.Request(url,headers={'User-Agent':' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'})
         try:
             response = urllib.request.urlopen(req)
             html = response.read().decode('utf-8')
             removeNonAscii(html)
             script_dir = os.path.dirname(__file__) 
-            rel_path = "raw monsterboard html data\index" + str(currentUrl) + ".aspx"
+            rel_path = "raw monsterboard html data\index" + str(currentUrl) + ".html"
             abs_file_path = os.path.join(script_dir, rel_path)
             file = open(abs_file_path, "w")
             file.write(html)
@@ -82,8 +82,9 @@ def data_saver(startUrl, endUrl):
             
         except HTTPError as e:
             content = e.read().decode('utf-8')
+            removeNonAscii(content)
             script_dir = os.path.dirname(__file__) 
-            rel_path = "raw monsterboard html data\index" + str(currentUrl) + ".aspx"
+            rel_path = "raw monsterboard html data\index" + str(currentUrl) + ".html"
             abs_file_path = os.path.join(script_dir, rel_path)
             file = open(abs_file_path, "w")
             file.write(content)

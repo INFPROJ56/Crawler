@@ -63,6 +63,7 @@ print("\nSaving html data...")
 def data_saver(startUrl, endUrl):
     currentUrl = startUrl
     for url in urls[startUrl:endUrl]:
+        print(url)
         req = urllib.request.Request(url= website + url,headers={'User-Agent':' Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'})
         try:
             response = urllib.request.urlopen(req)
