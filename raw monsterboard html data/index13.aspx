@@ -1,0 +1,1 @@
+http://vacature.monsterboard.nl/Partner-account-manager-Een-partner-kanaal-opzetten-Innovatieve-ERP-CRM-software-Start-up-Vacature-Amsterdam-Noord-Holland-Nederland-129393066.aspx
